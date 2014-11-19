@@ -15,6 +15,7 @@ import simpleIO.SimpleIO;
 public class StudyList {
 	
 	List<Item> studyList;
+	Item currentItem;
 	/**
      * 
      */
@@ -59,8 +60,8 @@ public class StudyList {
     	String[] components = string.split(" *\\|\\| *"); 
     	String stimulus = components[0];
     	String response = components[1];
-    	stimulus.trim();
-    	response.trim();
+    	stimulus = stimulus.trim();
+    	response = response.trim();
     	Item item = new Item(stimulus, response);
     	return item;
     }
@@ -79,12 +80,31 @@ public class StudyList {
     	return strings;
     }
     
-    public void load() throws IOException {
+    public Item get() {
+    	return currentItem;
+    }
+    
+    public Item next() {
+    	currentItem = studyList.remove(0);
+    	return currentItem;
+    }
+    
+    public int remaining() {
+    	return studyList.size();
+    }
+    
+    public boolean hasNext() {
+    	return !studyList.isEmpty();
+    }
+    
+    public void load(StudyGui gui) throws IOException {
         List<String> stringList = SimpleIO.load();
-        for (int i = 0; i < stringList.size(); i++){
-        	String string = stringList.get(i);
-        	Item item = convertStringToItem(string);
-        	studyList.add(item);
+        if (stringList != null){
+        	for (String string: stringList) {
+        		Item item = convertStringToItem(string);
+        		studyList.add(item);
+        	}
+        	gui.studyListLoaded();
         }
     }
     
