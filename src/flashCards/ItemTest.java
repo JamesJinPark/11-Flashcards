@@ -3,7 +3,7 @@
  */
 package flashCards;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +40,9 @@ public class ItemTest {
     @Test
     public final void testSetAndGetStimulus() {
     	assertEquals("James Park", out.getResponse());
-        //String testStimulus = "Do you enjoy cooking?";
-    	//out.setStimulus(testStimulus);
-    	//assertEquals(testStimulus, out.getStimulus());
+        String testStimulus = "Do you enjoy cooking?";
+    	out.setStimulus(testStimulus);
+    	assertEquals(testStimulus, out.getStimulus());
     }
 
     /**

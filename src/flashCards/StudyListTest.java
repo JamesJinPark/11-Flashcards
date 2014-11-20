@@ -20,7 +20,7 @@ public class StudyListTest {
 	Item testItem = new Item(DEFAULT_STIMULUS, DEFAULT_RESPONSE);
 	Item testItem2 = new Item("What class are you in?", "CIT 591");
 	String stringTest1 = "What is your name? || James Park";
-	String stringTest2 = "What class are you in? || CIT 591";	
+	String stringTest2 = "What class are you in? || CIT 591 || 0";	
 
 	
 	/**
@@ -101,5 +101,5 @@ public class StudyListTest {
     public final void testconvertItemToString() {
     	String testString = StudyList.convertItemToString(testItem2);
     	assertEquals(testString, stringTest2);
-    }      
+    }
 }

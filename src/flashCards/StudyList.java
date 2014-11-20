@@ -6,6 +6,7 @@ package flashCards;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import simpleIO.SimpleIO;
 
@@ -16,6 +17,7 @@ public class StudyList {
 	
 	List<Item> studyList;
 	Item currentItem;
+	int itemLocation = -1;
 	/**
      * 
      */
@@ -58,16 +60,24 @@ public class StudyList {
 
     public static Item convertStringToItem(String string) {
     	String[] components = string.split(" *\\|\\| *"); 
+    	int numCorrect;
     	String stimulus = components[0];
-    	String response = components[1];
+		String response = components[1];
+    	if (string.split(" *\\|\\| *").length == 3){
+    		numCorrect = Integer.parseInt(components[2]);	
+    	}
+    	else{
+    		numCorrect = 0;
+    	}
     	stimulus = stimulus.trim();
     	response = response.trim();
     	Item item = new Item(stimulus, response);
+        item.setTimesCorrect(numCorrect);
     	return item;
     }
     
     public static String convertItemToString(Item item){
-    	String string = item.stimulus + " || " + item.response;
+    	String string = item.stimulus + " || " + item.response + " || " + String.valueOf(item.numCorrect);
     	return string;
     }
     
@@ -85,17 +95,42 @@ public class StudyList {
     }
     
     public Item next() {
-    	currentItem = studyList.remove(0);
+    	if (hasNext()){
+    	itemLocation += 1;
+    	currentItem = studyList.get(itemLocation);
+    	while (currentItem.getTimesCorrect() > 3) {
+    		itemLocation += 1;
+    		currentItem = studyList.get(itemLocation);
+    	}
     	return currentItem;
-    }
-    
-    public int remaining() {
-    	return studyList.size();
+    	}
+    	return null;
     }
     
     public boolean hasNext() {
-    	return !studyList.isEmpty();
+    	int listCounter = this.itemLocation + 1;
+    	return listCounter < studyList.size();
     }
+    
+    public boolean randgen() {
+    	Random randNum = new Random();
+    	int rand = randNum.nextInt((3 - 1) + 1) + 1;
+    	return rand == 3; 
+    }
+    
+    public void swap(){
+    	Item item1; 
+    	Item item2;
+    	for (int i = 0; i < studyList.size() - 1; i++) {
+    		item1 = studyList.get(i);
+    		item2 = studyList.get(i + 1);
+    		if (randgen()){
+    			studyList.set(i, item2);
+    			studyList.set(i + 1, item1);
+    		}
+    	}
+    }
+    
     
     public void load(StudyGui gui) throws IOException {
         List<String> stringList = SimpleIO.load();
@@ -108,7 +143,7 @@ public class StudyList {
         }
     }
     
-    public void save() throws IOException {
+    public void save(StudyGui gui) throws IOException {
     	SimpleIO.save(convertItemsToStrings(studyList));
     }
     

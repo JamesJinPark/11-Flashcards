@@ -15,6 +15,7 @@ public class Item {
     public Item(String stimulus, String response) {
     	this.stimulus= stimulus;
     	this.response = response;
+    	this.numCorrect = numCorrect;
     }
     
     public String getStimulus() {
@@ -60,5 +61,4 @@ public class Item {
 		return this.getStimulus() == that.getStimulus() && 
 				this.getResponse() == that.getResponse();	
 	}
-
 }
